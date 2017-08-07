@@ -2,11 +2,29 @@ package pkgmnt
 
 import "github.com/emirpasic/gods/lists/arraylist"
 
-//Platform represents
+//Platform represents an Operating System family. Examples of
+// platforms include Red Hat, Suse, Debian, among others.
 type Platform struct {
-	Name      string
-	Runtime   string
-	Buildtime string
+	Name         string
+	Runtime      string
+	Buildtime    string
+	Repositories Repositories
+}
+
+// Repository represents an address where a package
+// is available on.
+type Repository struct {
+	Name        string
+	Description string
+	BaseURL     string
+	Enabled     bool
+	GPGCheck    bool
+	GPGKey      string
+}
+
+// Repositories is a list of Repository
+type Repositories struct {
+	arraylist.List
 }
 
 // Package comprises a library or application that implements a set of related
@@ -25,8 +43,8 @@ type Packages struct {
 	arraylist.List
 }
 
-// Repository provides access to a package repository
-type Repository interface {
+// RepositoryStore provides access to a package store.
+type RepositoryStore interface {
 	Store(p Package) error
 	StoreAll(ps Packages) error
 	GetWithName(name string) (Package, error)

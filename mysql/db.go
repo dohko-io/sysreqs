@@ -103,8 +103,9 @@ func (r *packageRepository) All() (pkgmnt.Packages, error) {
 	return packages, err
 }
 
-//NewPackageRepository creates and returns an instance of package's Repository.
-func NewPackageRepository(ds string) (pkgmnt.Repository, error) {
+// NewPackageRepository creates and returns an instance of package's
+// RepositoryStore.
+func NewPackageRepository(ds string) (pkgmnt.RepositoryStore, error) {
 	db, err := sql.Open("mysql", ds)
 
 	if err != nil {
