@@ -144,34 +144,42 @@ func rowsMapper(rows *sql.Rows) (pkgmnt.Packages, error) {
 
 	for rows.Next() {
 		var pkg pkgmnt.Package
-		var platforms string
-		var dependencies string
+		//http://go-database-sql.org/nulls.html
+		var platforms sql.NullString
+		var dependencies sql.NullString
 
-		err := rows.Scan(&pkg.Name, &pkg.Version, &pkg.Description, &platforms, &dependencies)
-
-		if err != nil {
-			return packages, err
-		}
-
-		var pl []pkgmnt.Platform
-		err = json.Unmarshal([]byte(platforms), &pl)
+		err := rows.Scan(&pkg.Name, &pkg.Version, &pkg.Architecture, &pkg.Description, &platforms, &dependencies)
 
 		if err != nil {
 			return packages, err
 		}
 
-		var deps []pkgmnt.Package
-		err = json.Unmarshal([]byte(dependencies), deps)
+		if platforms.Valid {
+			var pl []pkgmnt.Platform
+			err = json.Unmarshal([]byte(platforms.String), &pl)
 
-		if err != nil {
-			return packages, err
+			if err != nil {
+				return packages, err
+			}
+
+			pkg.Platforms = pl
 		}
 
-		pkg.Platforms = pl
-		pkg.Dependencies = deps
+		if dependencies.Valid {
+			var deps []pkgmnt.Package
+
+			if len(dependencies.String) > 2 {
+				err = json.Unmarshal([]byte(dependencies.String), deps)
+
+				if err != nil {
+					return packages, err
+				}
+
+				pkg.Dependencies = deps
+			}
+		}
 
 		packages.Add(pkg)
-
 	}
 
 	return packages, nil

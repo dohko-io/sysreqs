@@ -5,21 +5,21 @@ import "github.com/emirpasic/gods/lists/arraylist"
 //Platform represents an Operating System family. Examples of
 // platforms include Red Hat, Suse, Debian, among others.
 type Platform struct {
-	Name         string
-	Runtime      string
-	Buildtime    string
-	Repositories Repositories
+	Name         string       `json:"name"`
+	Runtime      string       `json:"runtime"`
+	Buildtime    string       `json:"buildtime"`
+	Repositories []Repository `json:"repositories"`
 }
 
 // Repository represents an address where a package
 // is available on.
 type Repository struct {
-	Name        string
-	Description string
-	BaseURL     string
-	Enabled     bool
-	GPGCheck    bool
-	GPGKey      string
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	BaseURL     string `json:"baseurl"`
+	Enabled     bool   `json:"enabled"`
+	GPGCheck    bool   `json:"gpgcheck"`
+	GPGKey      string `json:"gpgkey"`
 }
 
 // Repositories is a list of Repository
@@ -30,12 +30,12 @@ type Repositories struct {
 // Package comprises a library or application that implements a set of related
 // commands or features.
 type Package struct {
-	Name         string
-	Version      string
-	Architecture string
-	Platforms    []Platform
-	Description  string
-	Dependencies []Package
+	Name         string     `json:"name"`
+	Version      string     `json:"version"`
+	Architecture string     `json:"architecture"`
+	Platforms    []Platform `json:"platforms"`
+	Description  string     `json:"description"`
+	Dependencies []Package  `json:"dependencies"`
 }
 
 // Packages is a list of package
